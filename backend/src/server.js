@@ -120,6 +120,36 @@ app.post('/api/keys/create', async (req, res) => {
   }
 });
 
+app.post('/api/keys/delete', async (req, res) => {
+  try {
+    const { apiUrl, name } = req.body;
+
+    if (!apiUrl) {
+      return res.status(400).json({ error: 'apiUrl is required' });
+    }
+    if (!name) {
+      return res.status(400).json({ error: 'name is required' });
+    }
+
+    // Step 1: List all keys to find the ID for the given name
+    const listData = await makeHttpsRequest(`${apiUrl}/access-keys`, { method: 'GET' });
+    const keys = listData.accessKeys || [];
+
+    // Step 2: Find key by name (exact match)
+    const target = keys.find(k => k.name === name);
+    if (!target) {
+      return res.status(404).json({ error: `Key '${name}' not found on this server` });
+    }
+
+    // Step 3: Delete by ID (Outline API: DELETE /access-keys/{id})
+    await makeHttpsRequest(`${apiUrl}/access-keys/${target.id}`, { method: 'DELETE' });
+
+    res.json({ success: true, name });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/dist')));
   
