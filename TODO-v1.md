@@ -1,5 +1,7 @@
 # Outline Key Manager - Implementation Checklist
 
+!!! IMPORTANT - all tasks in this checklist are implemented. !!!
+
 ## Overview
 
 A self-hosted web app to manage Outline VPN server keys. When a user resets their Outline VPS to get a new IP, they need to recreate all keys with the same names. This app automates that process.

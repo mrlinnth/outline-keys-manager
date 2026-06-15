@@ -1,40 +1,21 @@
-import { useState } from 'react';
-import CreateKeyPage from './components/CreateKeyPage';
-import DeleteKeyPage from './components/DeleteKeyPage';
-import MigrateKeysPage from './components/MigrateKeysPage';
+import { useCallback, useState } from 'react';
+import CurrentServer from './components/CurrentServer';
+import NewServer from './components/NewServer';
 
 function App() {
-  // 'migrate' is default — it holds the pre-existing workflow
-  const [activePage, setActivePage] = useState('migrate');
+  const [currentApiUrl, setCurrentApiUrl] = useState(null);
+  const [currentKeys, setCurrentKeys] = useState([]);
+  const handleKeysLoaded = useCallback((apiUrl, keys) => {
+    setCurrentApiUrl(apiUrl);
+    setCurrentKeys(keys);
+  }, []);
 
   return (
     <div className="container">
-      <h1>Outline Key Manager</h1>
-
-      <nav className="tab-bar">
-        <button
-          className={`tab ${activePage === 'create' ? 'active' : ''}`}
-          onClick={() => setActivePage('create')}
-        >
-          Create Key
-        </button>
-        <button
-          className={`tab ${activePage === 'delete' ? 'active' : ''}`}
-          onClick={() => setActivePage('delete')}
-        >
-          Delete Key
-        </button>
-        <button
-          className={`tab ${activePage === 'migrate' ? 'active' : ''}`}
-          onClick={() => setActivePage('migrate')}
-        >
-          Migrate Keys
-        </button>
-      </nav>
-
-      {activePage === 'create' && <CreateKeyPage />}
-      {activePage === 'delete' && <DeleteKeyPage />}
-      {activePage === 'migrate' && <MigrateKeysPage />}
+      <h1>Outline Manager</h1>
+      <CurrentServer onKeysLoaded={handleKeysLoaded} />
+      <hr />
+      <NewServer sourceApiUrl={currentApiUrl} sourceKeys={currentKeys} />
     </div>
   );
 }
