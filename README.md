@@ -24,6 +24,17 @@ docker-compose up -d
 
 Access the app at `http://localhost:3000`
 
+## Deploy Updates
+
+After pulling new code on a server, recreate the container from a freshly built image:
+
+```bash
+git pull --ff-only
+docker compose up -d --force-recreate
+```
+
+The Compose file uses `pull_policy: build`, so `docker compose up` rebuilds the local image before starting the app.
+
 ## Development Setup
 
 ### Backend

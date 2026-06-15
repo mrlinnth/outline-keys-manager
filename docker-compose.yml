@@ -1,6 +1,8 @@
 services:
   app:
+    image: outline-key-manager:local
     build: .
+    pull_policy: build
     container_name: outline-key-manager
     restart: unless-stopped
     ports:
