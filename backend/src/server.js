@@ -150,6 +150,22 @@ app.post('/api/keys/delete', async (req, res) => {
   }
 });
 
+app.post('/api/keys/transfer', async (req, res) => {
+  try {
+    const { apiUrl } = req.body;
+
+    if (!apiUrl) {
+      return res.status(400).json({ error: 'apiUrl is required' });
+    }
+
+    const data = await makeHttpsRequest(`${apiUrl}/metrics/transfer`, { method: 'GET' });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/dist')));
   
