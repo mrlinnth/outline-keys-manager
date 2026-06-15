@@ -58,11 +58,11 @@ Old components to delete after new ones are in place:
 
 **Requirements:**
 
-- [ ] Add endpoint after the existing `/api/keys/delete` handler
-- [ ] Validate `apiUrl` is present in request body; return 400 if missing
-- [ ] Call `GET {apiUrl}/metrics/transfer` using the existing `makeHttpsRequest` utility
-- [ ] On success: return the Outline API response as-is
-- [ ] On error: return `{ "error": "error message" }` with status 500
+- [x] Add endpoint after the existing `/api/keys/delete` handler
+- [x] Validate `apiUrl` is present in request body; return 400 if missing
+- [x] Call `GET {apiUrl}/metrics/transfer` using the existing `makeHttpsRequest` utility
+- [x] On success: return the Outline API response as-is
+- [x] On error: return `{ "error": "error message" }` with status 500
 
 **Outline API response shape:**
 
@@ -77,7 +77,7 @@ Old components to delete after new ones are in place:
 
 Keys are access key `id` values (strings). The frontend joins this with the keys list.
 
-- [ ] Verify existing endpoints (`/list`, `/create`, `/delete`) are unchanged
+- [x] Verify existing endpoints (`/list`, `/create`, `/delete`) are unchanged
 
 ---
 
@@ -89,11 +89,11 @@ Keys are access key `id` values (strings). The frontend joins this with the keys
 
 **Requirements:**
 
-- [ ] Remove all tab state (`activePage`) and tab bar JSX
-- [ ] State to lift here:
+- [x] Remove all tab state (`activePage`) and tab bar JSX
+- [x] State to lift here:
   - `currentApiUrl` (string | null) — extracted apiUrl from current server JSON
   - `currentKeys` (array) — `[{ id, name, accessUrl, usageBytes }]`
-- [ ] Render structure:
+- [x] Render structure:
   ```jsx
   <div className="container">
     <h1>Outline Manager</h1>
@@ -107,7 +107,7 @@ Keys are access key `id` values (strings). The frontend joins this with the keys
     <NewServer sourceApiUrl={currentApiUrl} sourceKeys={currentKeys} />
   </div>
   ```
-- [ ] No other logic in App.jsx — all section logic lives in child components
+- [x] No other logic in App.jsx — all section logic lives in child components
 
 ---
 
@@ -133,19 +133,19 @@ Keys are access key `id` values (strings). The frontend joins this with the keys
 
 **Behavior:**
 
-- [ ] Textarea `onChange`:
+- [x] Textarea `onChange`:
   - Attempt `JSON.parse(value)`
   - If invalid JSON: set `validationError = 'Invalid JSON'`, set `apiUrl = null`
   - If valid but no `apiUrl` field: set `validationError = 'Missing apiUrl field'`, set `apiUrl = null`
   - If `apiUrl` doesn't start with `https://`: set `validationError = 'apiUrl must start with https://'`, set `apiUrl = null`
   - If all valid: clear `validationError`, set `apiUrl` to extracted value
 
-- [ ] `useEffect` watching `apiUrl`:
+- [x] `useEffect` watching `apiUrl`:
   - If `apiUrl` is null: do nothing
   - If `apiUrl` is set: wait 400ms (debounce), then trigger `fetchKeys()`
   - Clear debounce timer on cleanup
 
-- [ ] `fetchKeys()` function:
+- [x] `fetchKeys()` function:
   - Set `loading = true`, clear `fetchError`
   - Call `POST /api/keys/list` and `POST /api/keys/transfer` **in parallel** using `Promise.all`
   - Merge: for each key in `listData.accessKeys`, look up `transferData.bytesTransferredByUserId[key.id]` (default 0)
@@ -177,7 +177,7 @@ Keys are access key `id` values (strings). The frontend joins this with the keys
   </section>
   ```
 
-- [ ] Create Key button `onClick`:
+- [x] Create Key button `onClick`:
   - Set `createLoading = true`, clear `createError`
   - Call `POST /api/keys/create` with `{ apiUrl, name: newKeyName.trim() }`
   - On success: clear `newKeyName`, call `fetchKeys()` to refresh table
@@ -210,7 +210,7 @@ Keys are access key `id` values (strings). The frontend joins this with the keys
 
 **Requirements:**
 
-- [ ] Always render the table structure (even with empty `keys`):
+- [x] Always render the table structure (even with empty `keys`):
 
   ```html
   <table>
@@ -231,7 +231,7 @@ Keys are access key `id` values (strings). The frontend joins this with the keys
   </table>
   ```
 
-- [ ] Usage formatting helper `formatBytes(bytes)`:
+- [x] Usage formatting helper `formatBytes(bytes)`:
   - `0` → `'0 B'`
   - `< 1024` → `'{n} B'`
   - `< 1024²` → `'{n.x} KB'`
@@ -239,13 +239,13 @@ Keys are access key `id` values (strings). The frontend joins this with the keys
   - else → `'{n.x} GB'`
   - Round to 1 decimal place
 
-- [ ] **Copy Access Key** button:
+- [x] **Copy Access Key** button:
   - On click: `navigator.clipboard.writeText(key.accessUrl)`
   - After copy: set `copyFeedback = key.id`, clear it after 1500ms
   - Button text: `copyFeedback === key.id ? 'Copied!' : 'Copy Access Key'`
   - Disabled while `busyKeyId === key.id`
 
-- [ ] **Remove** button:
+- [x] **Remove** button:
   - On click: `window.confirm(\`Remove key "${key.name}"?\`)` — return if user cancels
   - Set `busyKeyId = key.id`, clear `actionError`
   - Call `POST /api/keys/delete` with `{ apiUrl, name: key.name }`
@@ -253,9 +253,9 @@ Keys are access key `id` values (strings). The frontend joins this with the keys
   - On error: set `actionError`
   - Set `busyKeyId = null`
 
-- [ ] Show `actionError` below the table if set
+- [x] Show `actionError` below the table if set
 
-- [ ] All action buttons disabled when `!apiUrl`
+- [x] All action buttons disabled when `!apiUrl`
 
 ---
 
@@ -284,15 +284,15 @@ Keys are access key `id` values (strings). The frontend joins this with the keys
 
 **Requirements:**
 
-- [ ] Same JSON textarea + validation logic as `CurrentServer.jsx`
+- [x] Same JSON textarea + validation logic as `CurrentServer.jsx`
   - Validate on `onChange`: valid JSON, has `apiUrl`, starts with `https://`
   - No auto-fetch — this section only acts on button click
 
-- [ ] "Migrate All Keys" button:
+- [x] "Migrate All Keys" button:
   - Disabled when: `!destApiUrl` OR `sourceKeys.length === 0` OR `loading`
   - Text: `loading ? 'Migrating...' : 'Migrate All Keys'`
 
-- [ ] On "Migrate All Keys" click — `handleMigrate()`:
+- [x] On "Migrate All Keys" click — `handleMigrate()`:
   1. Set `loading = true`, `results = null`
   2. Fetch existing keys on destination: `POST /api/keys/list` with `{ apiUrl: destApiUrl }`
   3. Build `existingNames` Set from `listData.accessKeys.map(k => k.name)`
@@ -306,11 +306,11 @@ Keys are access key `id` values (strings). The frontend joins this with the keys
   5. Set `results` to collected array
   6. Set `loading = false`
 
-- [ ] When `results` is set: render `<MigrateResults>` instead of (or below) the button
+- [x] When `results` is set: render `<MigrateResults>` instead of (or below) the button
 
-- [ ] `onStartOver` for `MigrateResults`: reset `results = null`, `jsonInput = ''`, `destApiUrl = null`
+- [x] `onStartOver` for `MigrateResults`: reset `results = null`, `jsonInput = ''`, `destApiUrl = null`
 
-- [ ] Render structure:
+- [x] Render structure:
   ```
   <section>
     <h2>New Server</h2>
@@ -342,15 +342,15 @@ This is a renamed, lightly adapted version of v1's `Results.jsx`.
 
 **Requirements:**
 
-- [ ] Summary line: `"X succeeded, Y failed"`
-- [ ] Successes section: format each as markdown in a `<pre>` block:
+- [x] Summary line: `"X succeeded, Y failed"`
+- [x] Successes section: format each as markdown in a `<pre>` block:
   - Same name: `**key-name**\naccessUrl`
   - Different name: `**original-name** (created as: final-name)\naccessUrl`
-- [ ] Failures section: show key name + error message for each failure
-- [ ] "Retry Failed Keys" button — only if failures exist; disabled when `loading`
+- [x] Failures section: show key name + error message for each failure
+- [x] "Retry Failed Keys" button — only if failures exist; disabled when `loading`
   - On click: call `onRetry(failedNames)`
   - Text: `loading ? 'Retrying...' : 'Retry Failed Keys'`
-- [ ] "Start Over" button — always visible; calls `onStartOver()`
+- [x] "Start Over" button — always visible; calls `onStartOver()`
 
 **Note:** `NewServer.jsx` must implement the retry handler:
 
@@ -369,11 +369,11 @@ This is a renamed, lightly adapted version of v1's `Results.jsx`.
 
 **Remove:**
 
-- [ ] `.tab-bar`, `.tab`, `.tab.active` styles (no longer used)
+- [x] `.tab-bar`, `.tab`, `.tab.active` styles (no longer used)
 
 **Add:**
 
-- [ ] Section heading styles:
+- [x] Section heading styles:
 
   ```css
   section h2 {
@@ -383,7 +383,7 @@ This is a renamed, lightly adapted version of v1's `Results.jsx`.
   }
   ```
 
-- [ ] Table styles:
+- [x] Table styles:
 
   ```css
   table {
@@ -408,7 +408,7 @@ This is a renamed, lightly adapted version of v1's `Results.jsx`.
   }
   ```
 
-- [ ] Action button styles (small, inline):
+- [x] Action button styles (small, inline):
 
   ```css
   .btn-action {
@@ -431,7 +431,7 @@ This is a renamed, lightly adapted version of v1's `Results.jsx`.
   }
   ```
 
-- [ ] Create key row (inline input + button):
+- [x] Create key row (inline input + button):
 
   ```css
   .create-key-row {
@@ -444,11 +444,11 @@ This is a renamed, lightly adapted version of v1's `Results.jsx`.
   }
   ```
 
-- [ ] `hr` divider between sections: `margin: 2rem 0; border: none; border-top: 1px solid #dee2e6;`
+- [x] `hr` divider between sections: `margin: 2rem 0; border: none; border-top: 1px solid #dee2e6;`
 
-- [ ] Disabled state for "Migrate All Keys": covered by existing `button:disabled` rule
+- [x] Disabled state for "Migrate All Keys": covered by existing `button:disabled` rule
 
-- [ ] Keep: container, form, textarea, error, result-box, `<pre>`, button base styles
+- [x] Keep: container, form, textarea, error, result-box, `<pre>`, button base styles
 
 ---
 
