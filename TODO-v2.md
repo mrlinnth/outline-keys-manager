@@ -458,14 +458,14 @@ This is a renamed, lightly adapted version of v1's `Results.jsx`.
 
 After verifying the app runs correctly:
 
-- [ ] Delete `frontend/src/components/ServerForm.jsx`
-- [ ] Delete `frontend/src/components/KeyList.jsx`
-- [ ] Delete `frontend/src/components/Results.jsx`
-- [ ] Delete `frontend/src/components/CreateKeyPage.jsx`
-- [ ] Delete `frontend/src/components/DeleteKeyPage.jsx`
-- [ ] Delete `frontend/src/components/ExportForm.jsx`
-- [ ] Delete `frontend/src/components/CreateForm.jsx`
-- [ ] Delete `frontend/src/components/MigrateKeysPage.jsx`
+- [x] Delete `frontend/src/components/ServerForm.jsx`
+- [x] Delete `frontend/src/components/KeyList.jsx`
+- [x] Delete `frontend/src/components/Results.jsx`
+- [x] Delete `frontend/src/components/CreateKeyPage.jsx`
+- [x] Delete `frontend/src/components/DeleteKeyPage.jsx`
+- [x] Delete `frontend/src/components/ExportForm.jsx`
+- [x] Delete `frontend/src/components/CreateForm.jsx`
+- [x] Delete `frontend/src/components/MigrateKeysPage.jsx`
 
 ---
 
