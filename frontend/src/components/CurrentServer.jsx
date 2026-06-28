@@ -186,6 +186,30 @@ function CurrentServer({ onKeysLoaded }) {
       {fetchError && <p className="error">{fetchError}</p>}
       {loading && <p>Loading keys...</p>}
 
+      <div className="create-key-row">
+        <input
+          type="text"
+          placeholder="Enter Key Name"
+          value={newKeyName}
+          onChange={(event) => setNewKeyName(event.target.value)}
+        />
+        <button
+          type="button"
+          onClick={handleCreateKey}
+          disabled={!apiUrl || createLoading || !newKeyName.trim()}
+        >
+          {createLoading ? 'Creating...' : 'Create New Key'}
+        </button>
+      </div>
+      {createError && <p className="error">{createError}</p>}
+
+      <KeyTable
+        keys={keys}
+        apiUrl={apiUrl}
+        onKeysChanged={fetchKeys}
+        disabled={loading || createLoading || deleteAllLoading}
+      />
+
       <div className="delete-all-row">
         <button
           type="button"
@@ -216,30 +240,6 @@ function CurrentServer({ onKeysLoaded }) {
           )}
         </div>
       )}
-
-      <div className="create-key-row">
-        <input
-          type="text"
-          placeholder="Enter Key Name"
-          value={newKeyName}
-          onChange={(event) => setNewKeyName(event.target.value)}
-        />
-        <button
-          type="button"
-          onClick={handleCreateKey}
-          disabled={!apiUrl || createLoading || !newKeyName.trim()}
-        >
-          {createLoading ? 'Creating...' : 'Create New Key'}
-        </button>
-      </div>
-      {createError && <p className="error">{createError}</p>}
-
-      <KeyTable
-        keys={keys}
-        apiUrl={apiUrl}
-        onKeysChanged={fetchKeys}
-        disabled={loading || createLoading || deleteAllLoading}
-      />
     </section>
   );
 }
