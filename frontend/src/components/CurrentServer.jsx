@@ -11,6 +11,9 @@ function CurrentServer({ onKeysLoaded }) {
   const [newKeyName, setNewKeyName] = useState('');
   const [createLoading, setCreateLoading] = useState(false);
   const [createError, setCreateError] = useState(null);
+  const [deleteAllLoading, setDeleteAllLoading] = useState(false);
+  const [deleteAllError, setDeleteAllError] = useState(null);
+  const [deleteAllResult, setDeleteAllResult] = useState(null);
 
   const fetchKeys = useCallback(async () => {
     if (!apiUrl) {
@@ -78,6 +81,8 @@ function CurrentServer({ onKeysLoaded }) {
     const value = event.target.value;
     setJsonInput(value);
     setFetchError(null);
+    setDeleteAllError(null);
+    setDeleteAllResult(null);
 
     let parsed;
     try {
@@ -133,6 +138,41 @@ function CurrentServer({ onKeysLoaded }) {
     }
   };
 
+  const handleDeleteAll = async () => {
+    if (!apiUrl || keys.length === 0) {
+      return;
+    }
+
+    const confirmed = window.confirm(`Delete all ${keys.length} keys from this server?`);
+    if (!confirmed) {
+      return;
+    }
+
+    setDeleteAllLoading(true);
+    setDeleteAllError(null);
+    setDeleteAllResult(null);
+
+    try {
+      const response = await fetch('/api/keys/delete-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiUrl })
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete all keys');
+      }
+
+      setDeleteAllResult(data);
+      await fetchKeys();
+    } catch (error) {
+      setDeleteAllError(error.message);
+    } finally {
+      setDeleteAllLoading(false);
+    }
+  };
+
   return (
     <section>
       <h2>Current Server</h2>
@@ -145,6 +185,37 @@ function CurrentServer({ onKeysLoaded }) {
       {validationError && <p className="error">{validationError}</p>}
       {fetchError && <p className="error">{fetchError}</p>}
       {loading && <p>Loading keys...</p>}
+
+      <div className="delete-all-row">
+        <button
+          type="button"
+          className="btn-danger"
+          onClick={handleDeleteAll}
+          disabled={!apiUrl || keys.length === 0 || loading || createLoading || deleteAllLoading}
+        >
+          {deleteAllLoading ? 'Deleting...' : 'Delete All'}
+        </button>
+      </div>
+      {deleteAllError && <p className="error">{deleteAllError}</p>}
+      {deleteAllResult && (
+        <div className="result-box">
+          <h3>Delete All Results</h3>
+          <p>
+            {deleteAllResult.deletedCount} deleted, {deleteAllResult.failedCount} failed
+          </p>
+          {deleteAllResult.failedKeys.length > 0 && (
+            <div>
+              <h3>Failed Deletes</h3>
+              {deleteAllResult.failedKeys.map((failure) => (
+                <div className="failure-item" key={failure.id}>
+                  <strong>{failure.name}</strong>
+                  <p className="error">{failure.error}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="create-key-row">
         <input
@@ -163,7 +234,12 @@ function CurrentServer({ onKeysLoaded }) {
       </div>
       {createError && <p className="error">{createError}</p>}
 
-      <KeyTable keys={keys} apiUrl={apiUrl} onKeysChanged={fetchKeys} />
+      <KeyTable
+        keys={keys}
+        apiUrl={apiUrl}
+        onKeysChanged={fetchKeys}
+        disabled={loading || createLoading || deleteAllLoading}
+      />
     </section>
   );
 }

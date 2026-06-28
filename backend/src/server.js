@@ -150,6 +150,51 @@ app.post('/api/keys/delete', async (req, res) => {
   }
 });
 
+app.post('/api/keys/delete-all', async (req, res) => {
+  try {
+    const { apiUrl } = req.body;
+
+    if (!apiUrl) {
+      return res.status(400).json({ error: 'apiUrl is required' });
+    }
+
+    const listData = await makeHttpsRequest(`${apiUrl}/access-keys`, { method: 'GET' });
+    const keys = listData.accessKeys || [];
+    const results = [];
+
+    for (const key of keys) {
+      try {
+        await makeHttpsRequest(`${apiUrl}/access-keys/${key.id}`, { method: 'DELETE' });
+        results.push({
+          id: key.id,
+          name: key.name,
+          status: 'success'
+        });
+      } catch (error) {
+        results.push({
+          id: key.id,
+          name: key.name,
+          status: 'failed',
+          error: error.message
+        });
+      }
+    }
+
+    const deletedKeys = results.filter((result) => result.status === 'success');
+    const failedKeys = results.filter((result) => result.status === 'failed');
+
+    res.json({
+      totalCount: keys.length,
+      deletedCount: deletedKeys.length,
+      failedCount: failedKeys.length,
+      deletedKeys,
+      failedKeys
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.post('/api/keys/transfer', async (req, res) => {
   try {
     const { apiUrl } = req.body;

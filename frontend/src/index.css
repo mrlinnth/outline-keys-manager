@@ -132,6 +132,14 @@ pre {
   border-color: #28a745;
 }
 
+.btn-danger {
+  background: #c92a2a;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #a61e1e;
+}
+
 .create-key-row {
   display: flex;
   gap: 0.5rem;
@@ -140,6 +148,10 @@ pre {
 
 .create-key-row input {
   flex: 1;
+}
+
+.delete-all-row {
+  margin: 1rem 0 0.5rem;
 }
 
 /* ── Result box (CreateKeyPage success + DeleteKeyPage success) ── */

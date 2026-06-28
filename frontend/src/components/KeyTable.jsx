@@ -16,7 +16,7 @@ function formatBytes(bytes) {
   return `${(bytes / 1024 ** 3).toFixed(1)} GB`;
 }
 
-function KeyTable({ keys, apiUrl, onKeysChanged }) {
+function KeyTable({ keys, apiUrl, onKeysChanged, disabled = false }) {
   const [busyKeyId, setBusyKeyId] = useState(null);
   const [copyFeedback, setCopyFeedback] = useState(null);
   const [actionError, setActionError] = useState(null);
@@ -93,7 +93,7 @@ function KeyTable({ keys, apiUrl, onKeysChanged }) {
                   type="button"
                   className={`btn-action btn-copy ${copyFeedback === key.id ? 'copied' : ''}`}
                   onClick={() => handleCopy(key)}
-                  disabled={!apiUrl || busyKeyId === key.id}
+                  disabled={!apiUrl || disabled || busyKeyId === key.id}
                 >
                   {copyFeedback === key.id ? 'Copied!' : 'Copy Access Key'}
                 </button>
@@ -101,7 +101,7 @@ function KeyTable({ keys, apiUrl, onKeysChanged }) {
                   type="button"
                   className="btn-action btn-remove"
                   onClick={() => handleRemove(key)}
-                  disabled={!apiUrl || busyKeyId === key.id}
+                  disabled={!apiUrl || disabled || busyKeyId === key.id}
                 >
                   Remove
                 </button>

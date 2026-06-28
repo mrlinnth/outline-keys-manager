@@ -6,6 +6,7 @@ A self-hosted web app to manage Outline VPN server keys. Supports creating, dele
 
 - **Create Key** — create a single named key on any Outline server and get its access URL
 - **Delete Key** — delete a key by name from any Outline server
+- **Delete All Keys** — delete every key from the current server after confirmation
 - **Migrate Keys** — fetch all key names from a source server and batch-create them on a destination server (useful when resetting a VPS to get a new IP)
   - Handle duplicate key names automatically (adds `_2`, `_3`, etc. suffixes)
   - View results with success/failure breakdown
@@ -70,6 +71,12 @@ The frontend runs on port 5173, with API proxy to `http://localhost:3000`.
 1. Paste the server JSON from Outline Manager
 2. Enter the name of the key to delete
 3. Click **Delete Key**
+
+### Delete All Keys
+
+1. Paste the server JSON from Outline Manager
+2. Wait for the key list to load
+3. Click **Delete All** and confirm the destructive action
 
 ### Migrate Keys
 
