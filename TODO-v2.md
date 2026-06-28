@@ -1,5 +1,7 @@
 # Outline Key Manager v2 — Implementation Checklist
 
+!!! IMPORTANT - all tasks in this checklist are implemented. !!!
+
 ## Overview
 
 v2 redesigns the UI from a tab-based 3-page flow into a single-page dashboard with two persistent sections: **Current Server** and **New Server**.
